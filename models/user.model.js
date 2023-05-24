@@ -29,16 +29,7 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    currentPlans: [
-        {
-            plan: {
-                type: String,
-            },
-            index: {
-                type: Number,
-            }
-        }
-    ],
+    currentPlans: [String],
     referredBy: [String],
     withdrawButtonTimer: {
         type: String,
