@@ -25,7 +25,20 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    currentPlans: [String],
+    verifyCode: {
+        type: Number,
+        default: 0
+    },
+    currentPlans: [
+        {
+            plan: {
+                type: String,
+            },
+            index: {
+                type: Number,
+            }
+        }
+    ],
     referredBy: [String],
     withdrawButtonTimer: {
         type: String,
