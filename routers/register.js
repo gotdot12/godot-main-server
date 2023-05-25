@@ -13,6 +13,7 @@ router.post("/register", async (req, res) => {
     const referCode = referCodet.substring(0, 8);
     const otp = Math.floor(1000 + Math.random() * 9000);
 
+
     if (!fname || !email || !password) {
         res.status(422).json({ error: "Please Fill All Required Feilds" })
     } else {
@@ -22,21 +23,9 @@ router.post("/register", async (req, res) => {
         if (fetchUser) {
             res.status(422).json({ error: "User Already Registered" });
         } else {
-            const fetchReferUser = await user.findOne({ referCode: referred });
-
-            const newBalance = fetchReferUser.currentBalance + 1000;
-
-            const firstUser = await user.findOneAndUpdate({ referCode: referred }, { $set: { "currentBalance": newBalance } }, { new: true });
-
-            const refeeredPersonsList = fetchReferUser.referredBy;
-
-            refeeredPersonsList.push(referred);
-
-            const referredBy = refeeredPersonsList;
-
             const currentBalance = 10000;
 
-            const add = new user({ name: fname, email, password, referCode, currentBalance, referredBy, verifyCode: otp });
+            const add = new user({ name: fname, email, password, referCode, currentBalance, verifyCode: otp });
 
             const result = await add.save();
 
@@ -71,7 +60,7 @@ router.post("/register", async (req, res) => {
 })
 
 router.post("/verify", async (req, res) => {
-    const { email, code } = req.body;
+    const { email, code, referred } = req.body;
     const codeOtp = Number(code);
 
 
@@ -82,7 +71,20 @@ router.post("/verify", async (req, res) => {
         const fetchUser = await user.findOne({ email: email });
 
         if (fetchUser.verifyCode == codeOtp) {
-            const plans = await user.findOneAndUpdate({ email: email }, { $set: { verifyCode: 0 } });
+            const fetchReferUser = await user.findOne({ referCode: referred });
+
+            const newBalance = fetchReferUser.currentBalance + 1000;
+
+            const firstUser = await user.findOneAndUpdate({ referCode: referred }, { $set: { "currentBalance": newBalance } }, { new: true });
+
+            const refeeredPersonsList = fetchReferUser.referredBy;
+
+            refeeredPersonsList.push(referred);
+
+            const referredBy = refeeredPersonsList;
+
+            const secUser = await user.findOneAndUpdate({ email: email }, { $set: { verifyCode: 0, "referredBy": referredBy } }, { new: true });
+
             return res.status(200).json({ message: "User verified!!! 🟢" })
         } else {
             res.status(422).json({ error: "Wrong OTP!!!" });
