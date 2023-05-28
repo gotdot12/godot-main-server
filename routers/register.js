@@ -21,7 +21,32 @@ router.post("/register", async (req, res) => {
         const fetchUser = await user.findOne({ email: email });
 
         if (fetchUser) {
-            res.status(422).json({ error: "User Already Registered" });
+            if (fetchUser.verifyCode != 0) {
+                const transporter = mailer.createTransport({
+                    service: "gmail",
+                    auth: {
+                        user: senderMail,
+                        pass: appPassword
+                    }
+                });
+
+                const mailOption = {
+                    from: senderMail,
+                    to: email,
+                    subject: "Email Verification",
+                    html: `<h3> ${fetchUser.verifyCode} is the OTP to verify your Email </h3>`
+                }
+
+                transporter.sendMail(mailOption, async (error, info) => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        res.status(421).json({ error: "Verify Email" });
+                    }
+                })
+            } else {
+                res.status(422).json({ error: "User Already Registered" });
+            }
         } else {
             const currentBalance = 10000;
 
