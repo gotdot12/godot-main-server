@@ -11,11 +11,15 @@ router.post("/login", async (req, res) => {
     } else {
         const fetchUser = await user.findOne({ email: email });
 
-        if (fetchUser.password == password) {
-            if (fetchUser.verifyCode != 0) {
-                res.status(421).json({ error: "Verify Email" });
+        if (fetchUser) {
+            if (fetchUser.password == password) {
+                if (fetchUser.verifyCode != 0) {
+                    res.status(421).json({ error: "Verify Email" });
+                } else {
+                    res.status(200).json({ error: "User Exist", user: fetchUser });
+                }
             } else {
-                res.status(200).json({ error: "User Exist", user: fetchUser });
+                res.status(422).json({ error: "User Not Exist" });
             }
         } else {
             res.status(422).json({ error: "User Not Exist" });
