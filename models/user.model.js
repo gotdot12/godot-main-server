@@ -25,6 +25,18 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    pendingBalance: {
+        type: Number,
+        default: 0
+    },
+    holdTransaction: {
+        type: Number,
+        default: 0
+    },
+    holdingDate: {
+        type: String,
+        required: false,
+    },
     verifyCode: {
         type: Number,
         default: 0
