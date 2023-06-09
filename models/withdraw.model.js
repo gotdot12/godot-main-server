@@ -1,23 +1,30 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
-    withdrawDetail: [
-        {
-            id: {
-                type: String,
-            },
-            amount: {
-                type: Number,
-            },
-            time: {
-                type: String,
-            },
-            currentStatus: {
-                type: Boolean,
-            }
-        }
-    ]
-});
+const userSchema = new mongoose.Schema(
+    {
+        plan: {
+            required: true,
+            type: String,
+        },
+        email: {
+            required: true,
+            type: String,
+        },
+        name: {
+            required: true,
+            type: String,
+        },
+        wallet: {
+            required: true,
+            type: String,
+        },
+        amount: {
+            required: true,
+            type: Number,
+        },
+    }, 
+    { timestamps: true }
+);
 
 const userModel = new mongoose.model("WITHDRAWAL", userSchema);
 
