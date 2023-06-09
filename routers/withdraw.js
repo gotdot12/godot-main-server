@@ -120,4 +120,18 @@ router.post("/wdecline", async (req, res) => {
     }
 })
 
+// router.post("/demo", async (req, res) => {
+//     const { email } = req.body;
+
+//     try {
+//         const firstUser = await user.updateMany({ }, { $set: { "pendingBalance": 0, "holdTransaction": 0, "holdingDate" : "" } }, { new: true });
+//         console.log("YESS");
+//         return res.status(200).json({ message: "USER DB is updated! 🟢", status: 200 })
+//     } catch (error) {
+//         return res
+//             .status(401)
+//             .json({ message: "Some error occurred while declining the payment! 🔴" });
+//     }
+// })
+
 module.exports = router
